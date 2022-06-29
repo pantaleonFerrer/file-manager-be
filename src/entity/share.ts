@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp, ManyToOne } from "typeorm"
 import { File } from "./file"
 import { User } from "./user"
 
@@ -14,8 +14,8 @@ export class Share {
     @Column("int")
     userIDNoProp!: User
 
-    @Column("int")
-    fileID!: File
+    @ManyToOne((type) => File, (file) => file.id)
+    file!: File
     
     @Column("timestamp")
     expirationDate!: Timestamp

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Timestamp } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, Timestamp, IsNull } from "typeorm"
 
 @Entity()
 export class User {
@@ -6,10 +6,10 @@ export class User {
     @PrimaryGeneratedColumn()
     id!: number
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     firstName!: string
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     lastName!: string
     
     @Column("varchar")
@@ -18,16 +18,16 @@ export class User {
     @Column("varchar")
     password!: string
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     phone!: string
 
-    @Column("json")
+    @Column({type: "json", nullable: true})
     colorSchema!: JSON
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     userPhoto!: string
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     subscriptionType!: string
 
     @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
