@@ -11,7 +11,6 @@ export async function register(data: User): Promise<{ ok: boolean; msg?: string,
     }
 
     const exist = await getUserByMail(data.email);
-    console.log(exist)
     if (exist?.email != null) {
         return { ok: false, msg: "Email already in use" };
     }
