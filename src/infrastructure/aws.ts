@@ -26,7 +26,10 @@ export class WeddoAWS {
     }
 
     async uploadFile(file: File, filename: string, folder?: string) {
-        const uploadedFile: AWS.S3.ManagedUpload.SendData = await this.awsInstance.upload({ Bucket: this.bucket, Key: `${folder}/${filename}`, Body: file }, { partSize: 5 * 1024 * 1024, queueSize: 10 })
+        const uploadedFile: AWS.S3.ManagedUpload.SendData = await this.awsInstance.upload(
+            { Bucket: this.bucket, Key: `${folder}/${filename}`, Body: file, ACL: 'public-read' },
+            { partSize: 5 * 1024 * 1024, queueSize: 10 }
+        )
             .on('httpUploadProgress', function (evt) {
                 console.log(evt);
             }).send(function (err, data) {
