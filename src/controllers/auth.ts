@@ -9,7 +9,7 @@ export class Auth {
     #router: Router = Router();
 
     constructor(App: Express) {
-        this.#router.get("/login", this.handleLogin.bind(this));
+        this.#router.post("/login", this.handleLogin.bind(this));
         this.#router.post("/register", this.handleRegister.bind(this));
         App.use(this.#router);
     }
