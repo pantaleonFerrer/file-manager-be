@@ -5,10 +5,12 @@ import { AppDataSource } from "./infrastructure/data-source";
 import { initControllers } from "./controllers";
 import "reflect-metadata";
 import 'dotenv/config';
+import * as cors from "cors";
 
 const App:Express = express();
 
 App.use(bodyParser);
+App.use(cors);
 
 App.use("/authorized", Authorized);
 
