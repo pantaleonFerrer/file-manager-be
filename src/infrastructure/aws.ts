@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import 'dotenv/config';
 
 export interface ReturnedFile {
     fileURL: string;
