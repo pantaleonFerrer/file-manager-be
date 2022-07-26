@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadFile } from "./fileUpload";
 
 const bodyParser = async (req: Request, res: Response, next: NextFunction) => {
     if (["OPTION", "OPTIONS"].includes(req.method)) {
@@ -6,8 +7,7 @@ const bodyParser = async (req: Request, res: Response, next: NextFunction) => {
         return;
     }
 
-    if (req.headers != null && req.headers["content-type"] === "application/json") {
-
+    if (req.headers != null && req.headers["content-type"]?.indexOf("application/json") > -1) {
         if (["POST", "PUT"].includes(req.method)) {
             try {
                 req.body = await collectStream(req);
@@ -23,6 +23,16 @@ const bodyParser = async (req: Request, res: Response, next: NextFunction) => {
             res.status(400).send("Invalid request method");
             return;
         }
+
+    } else if (req.headers != null && req.headers["content-type"]?.indexOf("multipart/form-data") > -1) {
+        if (["POST", "PUT"].includes(req.method)) {
+
+            req.body = {};
+
+            next();
+
+        }
+
     } else if (req.headers && !req.headers["content-type"]) {
         req.body = req.query;
         next();

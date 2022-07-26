@@ -1,11 +1,9 @@
 import { Request, Response, Router } from "express";
-import { login } from "../services/login";
 import { Express } from 'express';
-import { register } from "../services/register";
-import { getFilesService, getFilesSharedService, postFilesService } from "services/files";
+import { getFilesService, getFilesSharedService, postFilesService } from "../services/files";
 import { File as FileInterface } from "../entity/file";
 import { v1 } from "uuid";
-import { UploadFile } from "middlewares/fileUpload";
+import { UploadFile } from "../middlewares/fileUpload";
 
 
 export class File {
@@ -14,7 +12,7 @@ export class File {
 
     constructor(App: Express) {
         this.#router.get("/authorized/files", this.handleGetFiles.bind(this));
-        this.#router.post("/authorized/files", this.handleGetFiles.bind(this));
+        this.#router.post("/authorized/files", this.handlePostFiles.bind(this));
         this.#router.put("/authorized/files", this.handleGetFiles.bind(this));
         this.#router.delete("/authorized/files", this.handleGetFiles.bind(this));
         App.use(this.#router);
@@ -26,8 +24,7 @@ export class File {
 
         let basicFilter = 0;
 
-        if(requestData.uniqueKey != null) basicFilter++;
-        if(requestData.sharedWithMe != null) basicFilter++;
+        if(requestData.userID != null) basicFilter++;
 
         if(basicFilter === 0){
             res.sendStatus(400);
@@ -49,16 +46,6 @@ export class File {
     async handlePostFiles(req: Request, res: Response) {
 
         const requestData = req.body;
-
-        let basicFilter = 0;
-
-        if(requestData.uniqueKey != null) basicFilter++;
-        if(requestData.sharedWithMe != null) basicFilter++;
-
-        if(basicFilter === 0){
-            res.sendStatus(400);
-            return;
-        }
 
         let result = [];
 

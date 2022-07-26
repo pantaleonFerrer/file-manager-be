@@ -26,9 +26,12 @@ export class WeddoAWS {
         });
     }
 
-    async uploadFile(file: File, filename: string, folder?: string) {
-        const uploadedFile: AWS.S3.ManagedUpload.SendData = await this.awsInstance.upload(
-            { Bucket: this.bucket, Key: `${folder}/${v4().replaceAll("-","")}${filename}`, Body: file, ACL: 'public-read' },
+    uploadFile(file: any, filename: string, folder?: string) {
+
+        filename = `${folder}/${v4().replaceAll("-","")}${filename}`;
+
+        this.awsInstance.upload(
+            { Bucket: this.bucket, Key: filename, Body: file, ACL:'public-read' },
             { partSize: 5 * 1024 * 1024, queueSize: 10 }
         )
             .on('httpUploadProgress', function (evt) {
@@ -38,7 +41,9 @@ export class WeddoAWS {
                 console.log(err, data);
             });
 
-        return uploadedFile.Location;
+        const location = `https://${this.bucket}.s3.amazonaws.com/${filename}`;
+
+        return location;
     }
 
 }

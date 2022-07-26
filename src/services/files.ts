@@ -16,7 +16,9 @@ export async function getFilesService(data: { userID: number, uniqueKey?: string
 
 export async function postFilesService(data: CreateFile): Promise<File> {
 
-    return await insertFile(data);
+    const returned = await insertFile(data);
+
+    return (await getFiles({where: {id: returned.insertId}}))[0];
 
 }
 

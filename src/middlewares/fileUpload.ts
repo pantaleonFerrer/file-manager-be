@@ -1,7 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import Busboy from "busboy";
-import { WeddoAWS } from "infrastructure/aws";
-import { ReturnedFile } from '../infrastructure/aws';
+import { ReturnedFile, WeddoAWS } from '../infrastructure/aws';
 
 export function UploadFile(folder: string) {
     return (
@@ -16,16 +15,24 @@ export function UploadFile(folder: string) {
             next: NextFunction
         ) {
 
-            folder.replace("<userID>", req.body.userID);
+            folder = folder.replaceAll("<userID>", req.body.userID);
 
-            const busboy = new Busboy({ headers: req.headers });
+            const busboy = Busboy({ headers: req.headers });
 
             req.body.files = [];
+            let formData;
 
-            busboy.on('file', async function (fieldname, file, filename, encoding, mimetype) {
+            try {
+
+            busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+
+               mimetype = filename.mimeType;
+
+                filename = filename.filename.replaceAll(/[\s/]/g, "_");
+
                 console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
 
-                const location = await new WeddoAWS().uploadFile(file, filename, folder);
+                const location = new WeddoAWS().uploadFile(file, filename, folder);
 
                 req.body.files.push({
                     fileURL: location,
@@ -36,7 +43,25 @@ export function UploadFile(folder: string) {
 
             });
 
-            previousFunc.call(this, req, res, next);
+            busboy.on("field", (fieldname,val) => {
+                    if (fieldname === "data") {
+                        formData = val;
+                    }
+                }
+
+            );
+
+            busboy.on("finish", () => {
+                req.body = { ...req.body, files: req.body.files, ...formData };
+
+                previousFunc(req, res, next);
+            });
+
+            req.pipe(busboy);
+
+            }catch{
+                res.sendStatus(500);
+            }
 
         }
     }
