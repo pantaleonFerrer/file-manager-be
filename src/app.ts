@@ -12,6 +12,31 @@ const App:Express = express();
 App.use(bodyParser);
 App.use(cors());
 
+App.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type, Origin, Accept, X-Requested-With"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, DELETE, GET");
+    next();
+});
+
+App.use((req, res, next) => {
+    res.on("finish", () => {
+        const log = res.statusCode < 300 ? console.log : console.warn;
+        log(`${req.method} ${req.url} ${req.ip}:
+        Date: ${new Date().toISOString()}
+        Content-Length: ${req.headers["content-length"]}
+        User-Agent: ${req.headers["user-agent"]}
+        X-Forwarded-For: ${req.headers["x-forwarded-for"]}
+        Host: ${req.headers["host"]}
+        Referer: ${req.headers["referer"]}
+        ${res.statusCode} ${res.statusMessage}`);
+    });
+    next();
+});
+
 App.use("/authorized", Authorized);
 
 AppDataSource.initialize();
