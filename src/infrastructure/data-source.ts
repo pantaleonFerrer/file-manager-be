@@ -6,14 +6,14 @@ import { User } from "../entity/user"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
-    host: "localhost",
+    host: process.env.HOST,
     port: 3306,
-    username: "root",
-    password: "",
-    database: "weddo-filemanager",
+    username: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
     synchronize: true,
     logging: false,
-    entities: [User,File, Share],
+    entities: [User, File, Share],
     migrations: [],
     subscribers: [],
 })

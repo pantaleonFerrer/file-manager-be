@@ -29,3 +29,12 @@ export class File {
     createdAt!: Timestamp
 
 }
+
+export interface CreateFile {
+    fileURL: string;
+    name: string;
+    uniqueToken: string;
+    type: string;
+    weight: number;
+    userID: any;
+}

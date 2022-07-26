@@ -1,12 +1,12 @@
-import { File } from "../entity/file";
+import { File, CreateFile } from '../entity/file';
 import { getFiles, getSharedFile, insertFile } from "../helpers/file";
 
 
-export async function getFilesService(data: {userID: number, uniqueKey?: string}): Promise<File[]> {
+export async function getFilesService(data: { userID: number, uniqueKey?: string }): Promise<File[]> {
 
-    const obj:any = {where: {userID: data.userID}};
+    const obj: any = { where: { userID: data.userID } };
 
-    if(data.uniqueKey){
+    if (data.uniqueKey) {
         obj.where.uniqueToken = data.uniqueKey;
     }
 
@@ -14,7 +14,7 @@ export async function getFilesService(data: {userID: number, uniqueKey?: string}
 
 }
 
-export async function postFilesService(data: File): Promise<File> {
+export async function postFilesService(data: CreateFile): Promise<File> {
 
     return await insertFile(data);
 

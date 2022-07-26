@@ -1,5 +1,5 @@
 import { Share } from "entity/share";
-import { File } from "../entity/file";
+import { File, CreateFile } from '../entity/file';
 import { AppDataSource } from "../infrastructure/data-source"
 
 export async function getFiles(data: any) {
@@ -15,6 +15,6 @@ export async function getSharedFile(data: string){
     .getMany();
 }
 
-export async function insertFile(data: File) {
+export async function insertFile(data: CreateFile) {
     return (await AppDataSource.manager.insert(File, data)).raw;
 }
