@@ -9,19 +9,6 @@ import cors from "cors";
 
 const App:Express = express();
 
-App.use(bodyParser);
-App.use(cors());
-
-App.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Authorization, Content-Type, Origin, Accept, X-Requested-With"
-    );
-    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, DELETE, GET");
-    next();
-});
-
 App.use((req, res, next) => {
     res.on("finish", () => {
         const log = res.statusCode < 300 ? console.log : console.warn;
@@ -34,6 +21,20 @@ App.use((req, res, next) => {
         Referer: ${req.headers["referer"]}
         ${res.statusCode} ${res.statusMessage}`);
     });
+    next();
+});
+
+App.use(cors());
+
+App.use(bodyParser);
+
+App.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type, Origin, Accept, X-Requested-With"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, DELETE, GET");
     next();
 });
 
