@@ -1,5 +1,6 @@
 import AWS from "aws-sdk";
 import 'dotenv/config';
+import { v4 } from "uuid";
 
 export interface ReturnedFile {
     fileURL: string;
@@ -27,7 +28,7 @@ export class WeddoAWS {
 
     async uploadFile(file: File, filename: string, folder?: string) {
         const uploadedFile: AWS.S3.ManagedUpload.SendData = await this.awsInstance.upload(
-            { Bucket: this.bucket, Key: `${folder}/${filename}`, Body: file, ACL: 'public-read' },
+            { Bucket: this.bucket, Key: `${folder}/${v4().replaceAll("-","")}${filename}`, Body: file, ACL: 'public-read' },
             { partSize: 5 * 1024 * 1024, queueSize: 10 }
         )
             .on('httpUploadProgress', function (evt) {
