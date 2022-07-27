@@ -32,7 +32,7 @@ export class WeddoAWS {
 
         this.awsInstance.upload(
             { Bucket: this.bucket, Key: filename, Body: file, ACL:'public-read' },
-            { partSize: 5 * 1024 * 1024, queueSize: 10 }
+            { partSize: 20 * 1024 * 1024, queueSize: 10 }
         )
             .on('httpUploadProgress', function (evt) {
                 console.log(evt);

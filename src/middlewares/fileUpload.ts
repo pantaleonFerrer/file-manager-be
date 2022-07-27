@@ -21,6 +21,10 @@ export function UploadFile(folder: string) {
 
             req.body.files = [];
             let formData;
+            let bytes = 0;
+            const AWSInstance = new WeddoAWS();
+
+            const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
 
             try {
 
@@ -32,14 +36,20 @@ export function UploadFile(folder: string) {
 
                 console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
 
-                const location = new WeddoAWS().uploadFile(file, filename, folder);
+                const location = AWSInstance.uploadFile(file, filename, folder);
 
-                req.body.files.push({
-                    fileURL: location,
-                    name: filename,
-                    type: mimetype,
-                    weight: 0
-                } as ReturnedFile);
+                file
+                .on('data', (data) => {
+                    bytes += data.length;
+                })
+                .on('end', () => {
+                    req.body.files.push({
+                        fileURL: location,
+                        name: filename,
+                        type: mimetype,
+                        weight: bytesToMegaBytes(bytes)
+                    } as ReturnedFile);
+                })
 
             });
 
