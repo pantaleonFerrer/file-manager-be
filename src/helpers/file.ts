@@ -1,4 +1,4 @@
-import { Share } from "entity/share";
+import { Share } from "../entity/share";
 import { File, CreateFile } from '../entity/file';
 import { AppDataSource } from "../infrastructure/data-source"
 
@@ -7,14 +7,13 @@ export async function getFiles(data: any) {
 }
 
 export async function getSharedFile(data: string){
-    return await AppDataSource.manager
-    .getRepository(File)
-    .createQueryBuilder("file")
-    .leftJoinAndSelect("share.file", "file")
-    .where(`file.uniqueToken = ${data}`)
-    .getMany();
+    return await AppDataSource.manager.query(`SELECT * FROM share LEFT JOIN file ON (file.id = share.fileId) WHERE ${data}`);
 }
 
 export async function insertFile(data: CreateFile) {
     return (await AppDataSource.manager.insert(File, data)).raw;
+}
+
+export async function insertShare(data) {
+    return (await AppDataSource.manager.insert(Share, data)).raw;
 }

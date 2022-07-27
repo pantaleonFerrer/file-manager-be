@@ -11,14 +11,17 @@ export class Share {
     @Column("int")
     userIDProp!: User
 
-    @Column("int")
+    @Column({type: "int", nullable: true})
     userIDNoProp!: User
 
     @ManyToOne((type) => File, (file) => file.id)
     file!: File
     
-    @Column("timestamp")
+    @Column({type: "timestamp", nullable: true})
     expirationDate!: Timestamp
+
+    @Column("varchar")
+    groupUUID!: string
 
     @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
     createdAt!: Timestamp

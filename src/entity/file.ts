@@ -28,6 +28,9 @@ export class File {
     @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
     createdAt!: Timestamp
 
+    @Column({type: "timestamp", nullable: true})
+    deletedAt!: Timestamp
+
 }
 
 export interface CreateFile {
