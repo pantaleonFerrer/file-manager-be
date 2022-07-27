@@ -38,7 +38,14 @@ export class File {
             files = [...files, ...sharedFiles];
         }
 
-        res.json(files);
+        let finalFiles = [];
+
+        for(let row of files){
+            row.type = row.type.substring(row.type.indexOf("/") + 1, row.type.length).toUpperCase();
+            finalFiles.push(row);
+        }
+
+        res.json(finalFiles);
 
     }
 

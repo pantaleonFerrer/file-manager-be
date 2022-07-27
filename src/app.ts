@@ -25,7 +25,6 @@ App.use((req, res, next) => {
 });
 
 App.use(cors());
-
 App.use(bodyParser);
 
 App.use((req, res, next) => {
