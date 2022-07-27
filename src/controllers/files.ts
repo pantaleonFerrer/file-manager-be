@@ -54,7 +54,7 @@ export class File {
                 
             }
             delete row.userID;
-            delete row.id;
+            row.id = row.id + 2123432;
             row.type = row.type.substring(row.type.indexOf("/") + 1, row.type.length).toUpperCase();
             finalFiles.push({...row, createdBy: users[userID]} as unknown as File & {createdBy: User});
         }
