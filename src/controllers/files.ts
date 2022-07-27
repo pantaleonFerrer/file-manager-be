@@ -4,6 +4,8 @@ import { getFilesService, getFilesSharedService, postFilesService } from "../ser
 import { File as FileInterface } from "../entity/file";
 import { v1 } from "uuid";
 import { UploadFile } from "../middlewares/fileUpload";
+import { getUsersByID } from "../services/users";
+import { User } from '../entity/user';
 
 
 export class File {
@@ -39,10 +41,22 @@ export class File {
         }
 
         let finalFiles = [];
+        let users = {};
 
         for(let row of files){
+
+            const userID:any = row.userID;
+
+            if(users[userID] == null){
+                users[userID] = await getUsersByID(userID);
+                delete users[userID].password;
+                delete users[userID].id;
+                
+            }
+            delete row.userID;
+            delete row.id;
             row.type = row.type.substring(row.type.indexOf("/") + 1, row.type.length).toUpperCase();
-            finalFiles.push(row);
+            finalFiles.push({...row, createdBy: users[userID]} as unknown as File & {createdBy: User});
         }
 
         res.json(finalFiles);
