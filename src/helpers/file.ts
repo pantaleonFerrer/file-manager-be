@@ -14,6 +14,10 @@ export async function insertFile(data: CreateFile) {
     return (await AppDataSource.manager.insert(File, data)).raw;
 }
 
+export async function updateWeight(data) {
+    return (await AppDataSource.manager.update(File, {id: data.id}, {weight: data.weight}));
+}
+
 export async function insertShare(data) {
     return (await AppDataSource.manager.insert(Share, data)).raw;
 }

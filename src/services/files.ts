@@ -1,9 +1,9 @@
 import { File, CreateFile } from '../entity/file';
-import { getFiles, getSharedFile, insertFile, insertShare } from "../helpers/file";
+import { getFiles, getSharedFile, insertFile, insertShare, updateWeight } from "../helpers/file";
 import { In } from "typeorm"
 
 
-export async function getFilesService(data: { userID: number, uniqueKey?: string, uniqueKeys?: string[] }): Promise<File[]> {
+export async function getFilesService(data: { userID: number, uniqueKey?: string, uniqueKeys?: string[], folderID?: number, id?: number }): Promise<File[]> {
 
     const obj: any = { where: { userID: data.userID } };
 
@@ -13,6 +13,14 @@ export async function getFilesService(data: { userID: number, uniqueKey?: string
 
     if(data.uniqueKeys) {
         obj.where.uniqueToken = In(data.uniqueKeys);
+    }
+
+    if(data.folderID) {
+        obj.where.folderID = data.folderID;
+    }
+
+    if(data.id){
+        obj.where.id = data.id
     }
 
     obj.where.deletedAt = null;
@@ -27,6 +35,12 @@ export async function postFilesService(data: CreateFile): Promise<File> {
 
     return (await getFiles({where: {id: returned.insertId}}))[0];
 
+}
+
+export async function updateFileWeightService(weight: number, id: number){
+
+    updateWeight({weight, id})
+    
 }
 
 export async function postShareService(data: {file: number, groupUUID: string, expirationDate?: string, userIDProp: number}) {

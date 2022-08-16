@@ -55,7 +55,7 @@ export function UploadFile(folder: string) {
 
             busboy.on("field", (fieldname,val) => {
                     if (fieldname === "data") {
-                        formData = val;
+                        formData = JSON.parse(val);
                     }
                 }
 

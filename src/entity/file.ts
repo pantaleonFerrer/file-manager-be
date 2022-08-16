@@ -10,7 +10,7 @@ export class File {
     @Column("varchar")
     name: string
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     fileURL: string
     
     @Column("varchar")
@@ -19,11 +19,14 @@ export class File {
     @Column("int")
     userID!: User
 
-    @Column("double")
+    @Column({type: "double", nullable: true})
     weight!: number
 
-    @Column("varchar")
+    @Column({type: "varchar", nullable: true})
     type!: string
+
+    @Column({type: "int", nullable: true})
+    folderID!: number
 
     @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
     createdAt!: Timestamp
@@ -34,10 +37,11 @@ export class File {
 }
 
 export interface CreateFile {
-    fileURL: string;
+    fileURL?: string;
     name: string;
     uniqueToken: string;
-    type: string;
-    weight: number;
+    type?: string;
+    weight?: number;
     userID: any;
+    folderID?: any;
 }
